@@ -1,4 +1,4 @@
-
+// FIX: Added type definitions for Itinerary, DayPlan, and Activity to make this a valid module.
 export interface Activity {
   time: string;
   title: string;

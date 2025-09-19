@@ -1,24 +1,7 @@
 import React, { useState } from 'react';
-import { validateCity } from '../services/geminiService';
+import { validateCity } from '../services/geminiService.js';
 
-interface ItineraryFormProps {
-  onSubmit: (
-    city: string, 
-    startDate: string, 
-    endDate: string, 
-    preferences: string,
-    tripPurpose: string,
-    pace: string,
-    companions: string,
-    budget: string,
-    arrivalTime: string,
-    departureTime: string
-  ) => void;
-  isLoading: boolean;
-  minDate: string;
-}
-
-const ItineraryForm: React.FC<ItineraryFormProps> = ({ onSubmit, isLoading, minDate }) => {
+const ItineraryForm = ({ onSubmit, isLoading, minDate }) => {
   const [city, setCity] = useState('');
   const [startDate, setStartDate] = useState(minDate);
   const [endDate, setEndDate] = useState(minDate);
@@ -29,10 +12,10 @@ const ItineraryForm: React.FC<ItineraryFormProps> = ({ onSubmit, isLoading, minD
   const [budget, setBudget] = useState('');
   const [arrivalTime, setArrivalTime] = useState('09:00');
   const [departureTime, setDepartureTime] = useState('21:00');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [isValidating, setIsValidating] = useState(false);
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateChange = (e) => {
     const { id, value } = e.target;
     if (id === 'start-date') {
       setStartDate(value);
@@ -44,11 +27,11 @@ const ItineraryForm: React.FC<ItineraryFormProps> = ({ onSubmit, isLoading, minD
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
-    const missingFields: string[] = [];
+    const missingFields = [];
     if (!city) missingFields.push('目的地城市');
     if (!tripPurpose) missingFields.push('旅行目的');
     if (!pace) missingFields.push('旅行節奏');

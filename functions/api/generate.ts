@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type } from "https://aistudiocdn.com/@google/genai@^1.20.0";
-import type { Itinerary } from '../../types';
+// FIX: Add file extension to import path for better module resolution in serverless environments.
+import type { Itinerary } from '../../types.ts';
 
 // Cloudflare Pages Function types
 interface EventContext<Env, P extends string, Data> {

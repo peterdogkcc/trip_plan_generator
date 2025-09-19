@@ -1,6 +1,4 @@
-import type { Itinerary } from '../types';
-
-export const validateCity = async (city: string): Promise<boolean> => {
+export const validateCity = async (city) => {
   if (!city || city.trim().length === 0) {
     return false;
   }
@@ -29,17 +27,17 @@ export const validateCity = async (city: string): Promise<boolean> => {
 
 
 export const generateItinerary = async (
-  city: string,
-  startDate: string,
-  endDate: string,
-  preferences: string,
-  tripPurpose: string,
-  pace: string,
-  companions: string,
-  budget: string,
-  arrivalTime: string,
-  departureTime: string
-): Promise<Itinerary> => {
+  city,
+  startDate,
+  endDate,
+  preferences,
+  tripPurpose,
+  pace,
+  companions,
+  budget,
+  arrivalTime,
+  departureTime
+) => {
 
   try {
     const response = await fetch('/api/generate', {
@@ -66,7 +64,7 @@ export const generateItinerary = async (
       throw new Error(errorData.error || `行程生成失敗 (HTTP ${response.status})`);
     }
 
-    const itineraryData: Itinerary = await response.json();
+    const itineraryData = await response.json();
     if (!itineraryData || !itineraryData.tripTitle) {
         throw new Error("從伺服器收到的行程資料格式不正確。");
     }

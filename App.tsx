@@ -1,27 +1,26 @@
 import React, { useState } from 'react';
-import ItineraryForm from './components/ItineraryForm';
-import ItineraryDisplay from './components/ItineraryDisplay';
-import LoadingSpinner from './components/LoadingSpinner';
-import ErrorMessage from './components/ErrorMessage';
-import { generateItinerary } from './services/geminiService';
-import type { Itinerary } from './types';
+import ItineraryForm from './components/ItineraryForm.jsx';
+import ItineraryDisplay from './components/ItineraryDisplay.jsx';
+import LoadingSpinner from './components/LoadingSpinner.jsx';
+import ErrorMessage from './components/ErrorMessage.jsx';
+import { generateItinerary } from './services/geminiService.js';
 
-const App: React.FC = () => {
-  const [itinerary, setItinerary] = useState<Itinerary | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+const App = () => {
+  const [itinerary, setItinerary] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleGenerateItinerary = async (
-    city: string, 
-    startDate: string, 
-    endDate: string, 
-    preferences: string,
-    tripPurpose: string,
-    pace: string,
-    companions: string,
-    budget: string,
-    arrivalTime: string,
-    departureTime: string
+    city, 
+    startDate, 
+    endDate, 
+    preferences,
+    tripPurpose,
+    pace,
+    companions,
+    budget,
+    arrivalTime,
+    departureTime
   ) => {
     setIsLoading(true);
     setError(null);
@@ -37,7 +36,7 @@ const App: React.FC = () => {
     }
   };
   
-  const handleItineraryChange = (updatedItinerary: Itinerary) => {
+  const handleItineraryChange = (updatedItinerary) => {
     setItinerary(updatedItinerary);
   };
 
