@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import ItineraryForm from './components/ItineraryForm';
 import ItineraryDisplay from './components/ItineraryDisplay';
@@ -12,14 +11,24 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleGenerateItinerary = async (city: string, startDate: string, endDate: string, preferences: string) => {
+  const handleGenerateItinerary = async (
+    city: string, 
+    startDate: string, 
+    endDate: string, 
+    preferences: string,
+    tripPurpose: string,
+    pace: string,
+    companions: string,
+    budget: string,
+    arrivalTime: string,
+    departureTime: string
+  ) => {
     setIsLoading(true);
     setError(null);
     setItinerary(null);
     try {
-      const result = await generateItinerary(city, startDate, endDate, preferences);
+      const result = await generateItinerary(city, startDate, endDate, preferences, tripPurpose, pace, companions, budget, arrivalTime, departureTime);
       setItinerary(result);
-    // FIX: Added curly braces to the catch block to correctly handle errors.
     } catch (err) {
       console.error(err);
       setError(err instanceof Error ? err.message : '發生未知錯誤，請稍後再試。');
@@ -36,23 +45,21 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-100 font-sans text-slate-800">
-      <header className="relative h-80 sm:h-96">
+      <header className="h-64 sm:h-72">
         <img 
           src="https://picsum.photos/1600/900?travel,city" 
           alt="Travel background" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center p-4">
-          <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight">
-            AI 自助旅遊行程產生器
-          </h1>
-          <p className="mt-4 text-lg sm:text-xl text-slate-100 max-w-2xl">
-            只需輸入目的地與日期，讓 AI 為您打造專屬的完美旅程。
-          </p>
-        </div>
       </header>
 
-      <main className="container mx-auto p-4 sm:p-8 -mt-20">
+      <main className="container mx-auto p-4 sm:p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">
+            AI 自助旅遊行程產生器
+          </h1>
+        </div>
+
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate-200">
           <ItineraryForm onSubmit={handleGenerateItinerary} isLoading={isLoading} minDate={today} />
         </div>
