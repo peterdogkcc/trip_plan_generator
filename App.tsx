@@ -55,7 +55,7 @@ const App = () => {
       <main className="container mx-auto p-4 sm:p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">
-            AI 自助旅遊行程產生器
+            彼得狗的自助旅遊行程產生器
           </h1>
         </div>
 
