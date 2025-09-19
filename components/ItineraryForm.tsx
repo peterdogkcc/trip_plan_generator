@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { validateCity } from '../services/geminiService.js';
+import { validateCity } from '../services/geminiService.ts';
 
 const ItineraryForm = ({ onSubmit, isLoading, minDate }) => {
   const [city, setCity] = useState('');

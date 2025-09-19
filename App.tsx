@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import ItineraryForm from './components/ItineraryForm.jsx';
-import ItineraryDisplay from './components/ItineraryDisplay.jsx';
-import LoadingSpinner from './components/LoadingSpinner.jsx';
-import ErrorMessage from './components/ErrorMessage.jsx';
-import { generateItinerary } from './services/geminiService.js';
+import ItineraryForm from './components/ItineraryForm.tsx';
+import ItineraryDisplay from './components/ItineraryDisplay.tsx';
+import LoadingSpinner from './components/LoadingSpinner.tsx';
+import ErrorMessage from './components/ErrorMessage.tsx';
+import { generateItinerary } from './services/geminiService.ts';
 
 const App = () => {
   const [itinerary, setItinerary] = useState(null);
