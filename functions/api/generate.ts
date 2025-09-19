@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from "https://cdn.jsdelivr.net/npm/@google/genai@1.20.0/dist/index.mjs";
+import { GoogleGenAI, Type } from "https://esm.sh/@google/genai@1.20.0";
 // FIX: Add file extension to import path for better module resolution in serverless environments.
 import type { Itinerary } from '../../types.ts';
 

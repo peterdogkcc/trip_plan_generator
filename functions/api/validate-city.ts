@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "https://cdn.jsdelivr.net/npm/@google/genai@1.20.0/dist/index.mjs";
+import { GoogleGenAI } from "https://esm.sh/@google/genai@1.20.0";
 
 // Cloudflare Pages Function types
 interface EventContext<Env, P extends string, Data> {
