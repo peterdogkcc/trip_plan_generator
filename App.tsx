@@ -4,23 +4,24 @@ import ItineraryDisplay from './components/ItineraryDisplay.tsx';
 import LoadingSpinner from './components/LoadingSpinner.tsx';
 import ErrorMessage from './components/ErrorMessage.tsx';
 import { generateItinerary } from './services/geminiService.ts';
+import type { Itinerary } from './types.ts';
 
 const App = () => {
-  const [itinerary, setItinerary] = useState(null);
+  const [itinerary, setItinerary] = useState<Itinerary | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGenerateItinerary = async (
-    city, 
-    startDate, 
-    endDate, 
-    preferences,
-    tripPurpose,
-    pace,
-    companions,
-    budget,
-    arrivalTime,
-    departureTime
+    city: string, 
+    startDate: string, 
+    endDate: string, 
+    preferences: string,
+    tripPurpose: string,
+    pace: string,
+    companions: string,
+    budget: string,
+    arrivalTime: string,
+    departureTime: string
   ) => {
     setIsLoading(true);
     setError(null);
@@ -36,7 +37,7 @@ const App = () => {
     }
   };
   
-  const handleItineraryChange = (updatedItinerary) => {
+  const handleItineraryChange = (updatedItinerary: Itinerary) => {
     setItinerary(updatedItinerary);
   };
 

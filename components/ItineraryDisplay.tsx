@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
+import type { Itinerary, DayPlan, Activity } from '../types.ts';
 
-const ActivityCard = ({ activity, dayIndex, activityIndex, onUpdate, onDelete }) => {
+interface ActivityCardProps {
+    activity: Activity;
+    dayIndex: number;
+    activityIndex: number;
+    onUpdate: (dayIndex: number, activityIndex: number, updatedActivity: Activity) => void;
+    onDelete: (dayIndex: number, activityIndex: number) => void;
+}
+
+const ActivityCard = ({ activity, dayIndex, activityIndex, onUpdate, onDelete }: ActivityCardProps) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [editedActivity, setEditedActivity] = useState(activity);
+    const [editedActivity, setEditedActivity] = useState<Activity>(activity);
 
     const handleSave = () => {
         onUpdate(dayIndex, activityIndex, editedActivity);
@@ -96,7 +105,16 @@ const ActivityCard = ({ activity, dayIndex, activityIndex, onUpdate, onDelete })
     );
 };
 
-const DayPlanCard = ({ dayPlan, dayIndex, onUpdateActivity, onDeleteActivity, onAddActivity }) => {
+interface DayPlanCardProps {
+    dayPlan: DayPlan;
+    dayIndex: number;
+    onUpdateActivity: (dayIndex: number, activityIndex: number, updatedActivity: Activity) => void;
+    onDeleteActivity: (dayIndex: number, activityIndex: number) => void;
+    onAddActivity: (dayIndex: number) => void;
+}
+
+
+const DayPlanCard = ({ dayPlan, dayIndex, onUpdateActivity, onDeleteActivity, onAddActivity }: DayPlanCardProps) => {
   return (
     <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden mb-6">
       <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-4">
@@ -131,23 +149,28 @@ const DayPlanCard = ({ dayPlan, dayIndex, onUpdateActivity, onDeleteActivity, on
   );
 };
 
-const ItineraryDisplay = ({ itinerary, onItineraryChange }) => {
+interface ItineraryDisplayProps {
+    itinerary: Itinerary;
+    onItineraryChange: (itinerary: Itinerary) => void;
+}
 
-  const handleUpdateActivity = (dayIndex, activityIndex, updatedActivity) => {
+const ItineraryDisplay = ({ itinerary, onItineraryChange }: ItineraryDisplayProps) => {
+
+  const handleUpdateActivity = (dayIndex: number, activityIndex: number, updatedActivity: Activity) => {
     const newItinerary = JSON.parse(JSON.stringify(itinerary));
     newItinerary.dailyPlans[dayIndex].activities[activityIndex] = updatedActivity;
     onItineraryChange(newItinerary);
   };
 
-  const handleDeleteActivity = (dayIndex, activityIndex) => {
+  const handleDeleteActivity = (dayIndex: number, activityIndex: number) => {
     const newItinerary = JSON.parse(JSON.stringify(itinerary));
     newItinerary.dailyPlans[dayIndex].activities.splice(activityIndex, 1);
     onItineraryChange(newItinerary);
   };
   
-  const handleAddActivity = (dayIndex) => {
+  const handleAddActivity = (dayIndex: number) => {
     const newItinerary = JSON.parse(JSON.stringify(itinerary));
-    const newActivity = {
+    const newActivity: Activity = {
         time: "12:00 - 13:00",
         title: "新活動",
         description: "請填寫此處的活動細節。"
