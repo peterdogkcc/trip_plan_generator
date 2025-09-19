@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type } from "https://aistudiocdn.com/@google/genai@^1.20.0";
 import type { Itinerary } from '../../types';
 
 // Cloudflare Pages Function types

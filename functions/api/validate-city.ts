@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI } from "https://aistudiocdn.com/@google/genai@^1.20.0";
 
 // Cloudflare Pages Function types
 interface EventContext<Env, P extends string, Data> {
