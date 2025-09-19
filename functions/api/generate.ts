@@ -1,7 +1,3 @@
-import { GoogleGenAI, Type } from "//esm.sh/@google/genai@1.20.0";
-// FIX: Add file extension to import path for better module resolution in serverless environments.
-import type { Itinerary } from '../../types.ts';
-
 // Cloudflare Pages Function types
 interface EventContext<Env, P extends string, Data> {
     request: Request;
@@ -14,43 +10,43 @@ interface EventContext<Env, P extends string, Data> {
 type PagesFunction<Env = unknown> = (context: EventContext<Env, any, any>) => Response | Promise<Response>;
 interface Env { API_KEY: string; }
 
-const schema = {
-  type: Type.OBJECT,
+const jsonSchema = {
+  type: "object",
   properties: {
     tripTitle: {
-      type: Type.STRING,
+      type: "string",
       description: "行程的總標題，例如 '日本關東關西十日遊'",
     },
     dailyPlans: {
-      type: Type.ARRAY,
+      type: "array",
       description: "每日行程規劃的陣列",
       items: {
-        type: Type.OBJECT,
+        type: "object",
         properties: {
           date: {
-            type: Type.STRING,
+            type: "string",
             description: "當天日期，格式 YYYY-MM-DD",
           },
           day: {
-            type: Type.STRING,
+            type: "string",
             description: "行程的第幾天，例如 '第一天'",
           },
           activities: {
-            type: Type.ARRAY,
+            type: "array",
             description: "當天的活動列表",
             items: {
-              type: Type.OBJECT,
+              type: "object",
               properties: {
                 time: {
-                  type: Type.STRING,
+                  type: "string",
                   description: "建議時間區間，例如 '早上 9:00 - 12:00'",
                 },
                 title: {
-                  type: Type.STRING,
+                  type: "string",
                   description: "活動或景點名稱，可包含所在城市，例如 '[東京] 參觀淺草寺'",
                 },
                 description: {
-                  type: Type.STRING,
+                  type: "string",
                   description: "活動的簡短描述，包含地點特色或建議",
                 },
               },
@@ -92,8 +88,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       throw new Error("API_KEY is not configured in Cloudflare environment.");
     }
 
-    const ai = new GoogleGenAI({ apiKey });
-
     const preferencesDetails = [
       tripPurpose && `旅行目的: ${tripPurpose}`,
       pace && `旅行節奏: ${pace}`,
@@ -128,21 +122,46 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     請以繁體中文回覆，並嚴格遵循指定的 JSON schema 格式。
     `;
     
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: schema,
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+    const apiResponse = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        tools: [{
+          functionDeclarations: [{
+            name: "format_itinerary",
+            description: "Formats the itinerary into the specified JSON structure.",
+            parameters: jsonSchema
+          }]
+        }],
+        toolConfig: {
+          functionCallingConfig: {
+            mode: "ANY",
+            allowedFunctionNames: ["format_itinerary"]
+          }
+        }
+      })
     });
 
-    const jsonText = response.text.trim();
-    if (!jsonText) {
-        throw new Error("API responded with empty content.");
+    if (!apiResponse.ok) {
+        const errorBody = await apiResponse.text();
+        console.error("Google AI API Error:", errorBody);
+        throw new Error(`Google AI API request failed with status ${apiResponse.status}`);
     }
+
+    const responseData = await apiResponse.json();
+    const functionCall = responseData.candidates?.[0]?.content?.parts?.find(part => part.functionCall);
     
-    const itineraryData: Itinerary = JSON.parse(jsonText);
+    if (!functionCall?.functionCall?.args) {
+      console.error("Invalid response structure from API:", JSON.stringify(responseData, null, 2));
+      throw new Error("API 未返回有效的行程資料，請檢查提示詞或模型設定。");
+    }
+
+    const itineraryData = functionCall.functionCall.args;
     
     return new Response(JSON.stringify(itineraryData), {
       headers: { 'Content-Type': 'application/json' },

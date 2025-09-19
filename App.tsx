@@ -80,10 +80,6 @@ const App = () => {
           )}
         </div>
       </main>
-
-      <footer className="text-center p-6 mt-8 text-slate-600 text-sm">
-        <p>由 Gemini API 強力驅動 | 專為現代旅行者設計</p>
-      </footer>
     </div>
   );
 };
